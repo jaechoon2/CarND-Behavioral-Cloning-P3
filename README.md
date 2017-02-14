@@ -2,10 +2,6 @@
 
 ##Writeup Template
 
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
-
 **Behavrioal Cloning Project**
 
 The goals / steps of this project are the following:
@@ -18,13 +14,15 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image1]: ./images/data_augmentation_before.png "Histogram of Steering Angles Before Data Augmentation"
+[image2]: ./images/data_augmentation_after.png "Model Visualization"
+[image1]: ./images/data_augmentation_before.png "Model Visualization"
+[image2]: ./images/placeholder.png "Grayscaling"
+[image3]: ./images/placeholder_small.png "Recovery Image"
+[image4]: ./images/placeholder_small.png "Recovery Image"
+[image5]: ./images/placeholder_small.png "Recovery Image"
+[image6]: ./images/placeholder_small.png "Normal Image"
+[image7]: ./images/placeholder_small.png "Flipped Image"
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -38,12 +36,12 @@ My project includes the following files:
 * model.py containing the script to create and train the model
 * drive.py for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network 
-* writeup_report.md or writeup_report.pdf summarizing the results
+* READMe.md summarizing the results (This file)
 
 ####2. Submssion includes functional code
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
 ```sh
-python drive.py model.h5
+python drive.py model.json
 ```
 
 ####3. Submssion code is usable and readable
@@ -54,9 +52,7 @@ The model.py file contains the code for training and saving the convolution neur
 
 ####1. An appropriate model arcthiecture has been employed
 
-My model consists of a convolution neural network with 3x3 filter sizes and depths between 32 and 128 (model.py lines 18-24) 
-
-The model includes RELU layers to introduce nonlinearity (code line 20), and the data is normalized in the model using a Keras lambda layer (code line 18). 
+I adapted the [Nvidia's End to End Learning for Self-Driving Cars](http://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf) model. 
 
 ####2. Attempts to reduce overfitting in the model
 
