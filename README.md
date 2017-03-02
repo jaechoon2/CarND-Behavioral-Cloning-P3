@@ -1,117 +1,132 @@
-# Project 3: Use Deep Learning to Clone Driving Behavior
+#**Behavioral Cloning** 
 
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-Overview
----
-This repository contains starting files for P3, Behavioral Cloning.
-
-In this project, you will use what you've learned about deep neural networks and convolutional neural networks to clone driving behavior. You will train, validate and test a model using Keras. The model will output a steering angle to an autonomous vehicle.
-
-We have provided a simulator where you can steer a car around a track for data collection. You'll use image data and steering angles to train a neural network and then use this model to drive the car autonomously around the track.
-
-We also want you to create a detailed writeup of the project. Check out the [writeup template](https://github.com/udacity/CarND-Behavioral-Cloning-P3/blob/master/writeup_template.md) for this project and use it as a starting point for creating your own writeup. The writeup can be either a markdown file or a pdf document.
-
-To meet specifications, the project will require submitting four files: 
-* model.py (script used to create and train the model)
-* drive.py (script to drive the car - feel free to modify this file)
-* model.h5 (a trained Keras model)
-* a report writeup file (either markdown or pdf)
-
-Optionally, a video of your vehicle's performance can also be submitted with the project although this is optional. This README file describes how to output the video in the "Details About Files In This Directory" section.
-
-Creating a Great Writeup
----
-A great writeup should include the [rubric points](https://review.udacity.com/#!/rubrics/432/view) as well as your description of how you addressed each point.  You should include a detailed description of the code used (with line-number references and code snippets where necessary), and links to other supporting documents or external references.  You should include images in your writeup to demonstrate how your code works with examples.  
-
-All that said, please be concise!  We're not looking for you to write a book here, just a brief description of how you passed each rubric point, and references to the relevant code :). 
-
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup.
-
-The Project
----
 The goals / steps of this project are the following:
-* Use the simulator to collect data of good driving behavior 
-* Design, train and validate a model that predicts a steering angle from image data
-* Use the model to drive the vehicle autonomously around the first track in the simulator. The vehicle should remain on the road for an entire loop around the track.
-* Summarize the results with a written report
+* Use the simulator to collect data of good driving behavior
+* Build, a convolution neural network in Keras that predicts steering angles from images
+* Train and validate the model with a training and validation set
+* Test that the model successfully drives around track one without leaving the road
 
-### Dependencies
-This lab requires:
 
-* [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit)
+[//]: # (Image References)
 
-The lab enviroment can be created with CarND Term1 Starter Kit. Click [here](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) for the details.
+[image1]: ./examples/data_augmentation_before.png "Histogram of Steering Angles Before Data Augmentation"
+[image2]: ./examples/data_augmentation_after.png "Model Visualization"
+[image_recovery1]: ./examples/recovery1.jpg "Recovery Image 1"
+[image_recovery2]: ./examples/recovery2.jpg "Recovery Image 2"
+[image_recovery3]: ./examples/recovery3.jpg "Recovery Image 3"
+[image_right]: ./examples/right_image.png "Normal Image"
+[image_right_flipped]: ./examples/right_image_flipped.png "Flipped Image"
+[image_nvidia_model]: ./examples/nvidia_model.png "Nvidia model"
+[image_nvidia_model_tf]: ./examples/nvidia_model_tf.png "Nvidia model (Keras)"
+[image_center]: ./examples/center_image.png "Center Image"
 
-The following resources can be found in this github repository:
-* drive.py
-* video.py
-* writeup_template.md
+---
 
-The simulator can be downloaded from the classroom. In the classroom, we have also provided sample data that you can optionally use to help train your model.
-
-## Details About Files In This Directory
-
-### `drive.py`
-
-Usage of `drive.py` requires you have saved the trained model as an h5 file, i.e. `model.h5`. See the [Keras documentation](https://keras.io/getting-started/faq/#how-can-i-save-a-keras-model) for how to create this file using the following command:
+Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
 ```sh
-model.save(filepath)
+python drive.py model.json
 ```
 
-Once the model has been saved, it can be used with drive.py using this command:
+###Model Architecture and Training Strategy
 
-```sh
-python drive.py model.h5
-```
+####1. An appropriate model architecture has been employed
 
-The above command will load the trained model and use the model to make predictions on individual images in real-time and send the predicted angle back to the server via a websocket connection.
+I adapted the [Nvidia's End to End Learning for Self-Driving Cars](http://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf) model (a.k.a. Nvidia model) with slight modification by adding ReLU activation on each layer. I chose this model because Nvidia model is well documented, proven and easy to implement.
 
-Note: There is known local system's setting issue with replacing "," with "." when using drive.py. When this happens it can make predicted steering values clipped to max/min values. If this occurs, a known fix for this is to add "export LANG=en_US.utf8" to the bashrc file.
+![alt text][image_nvidia_model]
 
-#### Saving a video of the autonomous agent
 
-```sh
-python drive.py model.h5 run1
-```
+####2. Attempts to reduce overfitting in the model
 
-The fourth argument `run1` is the directory to save the images seen by the agent to. If the directory already exists it'll be overwritten.
+The model contains dropout layers in order to reduce overfitting (model.py line 134). 
 
-```sh
-ls run1
+The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 10-16). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_424.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_451.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_477.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_528.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_573.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_618.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_697.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_723.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_749.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_817.jpg
-...
-```
+####3. Model parameter tuning
 
-The image file name is a timestamp when the image image was seen. This information is used by `video.py` to create a chronological video of the agent driving.
+The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 148).
 
-### `video.py`
+####4. Appropriate training data
 
-```sh
-python video.py run1
-```
+Training data was chosen to keep the vehicle driving on the road. I used the [Udacity's Sample Training Data](https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip) for initial training. After observing that the vehicle was not able to 
+recover in track 1, I created recovery data using the simulator by recovering from off track to the center lane. In addition, I drove Track 2 so that the model can handle both Track 1 and Track 2.
 
-Create a video based on images found in the `run1` directory. The name of the video will be name of the directory following by `'.mp4'`, so, in this case the video will be `run1.mp4`.
+For details about how I created the training data, see the next section. 
 
-Optionally one can specify the FPS (frames per second) of the video:
+###Model Architecture and Training Strategy
 
-```sh
-python video.py run1 --fps 48
-```
+####1. Solution Design Approach
 
-The video will run at 48 FPS. The default FPS is 60.
+My solution design approach was evolved through multiple iterations, starting from leveraging the proven Nvidia model with Udacity's sample training data using Jupyter notebook. Once I verified that the training is working with small epochs (~10), I created the model.py from the code from Jupyter notebook, and tested the drive.py with the simulator. 
 
-#### Why create a video
+After multiple iterations, I came up with the following key design approaches:
+1. Leverage all images from left, center and right cameras by applying the steering offset of 0.3 for left and right camera.
+2. Prepare each image by cropping the top 1/3 image which does not contain the road information.
+3. Split the data by 80:20 ratio -- 80% for training data and 20% for validation data.
+4. Adjust the distribution of the steering angles to form Gaussian distribution.
+5. Augment dataset through random brightness, shadows and jiggles so that the training encounters these random scenarios.
+6. Tweak the batch size, nb_epoch and sample_per_epoch to find the "good enough" parameter values without needing to spend too long time for training.
+7. Let the car drive around tracks and observe the behavior.
+8. Create training data by manually driving the car with a joystick for recovery scenarios and the track two based on the feedback from step 7.
 
-1. It's been noted the simulator might perform differently based on the hardware. So if your model drives succesfully on your machine it might not on another machine (your reviewer). Saving a video is a solid backup in case this happens.
-2. You could slightly alter the code in `drive.py` and/or `video.py` to create a video of what your model sees after the image is processed (may be helpful for debugging).
+I repeated the above steps multiple iterations until the car was driving around both track one and track two.
+
+At the end of the process, the vehicle is able to drive autonomously around the track one and track two without leaving the road.
+
+####2. Final Model Architecture
+
+The final model architecture (model.py lines 89-123) consisted of a convolution neural network with the following layers and layer sizes based on the slight modification of Nvidia model:
+
+
+![alt text][image_nvidia_model_tf]
+
+####3. Creation of the Training Set & Training Process
+
+The creation of the training set and training process was done through multiple iterations. Initially, I studied Udacity's sample training data using the provided video.py to see how the training data looked like, and used the sample training data set for training.
+
+I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from the car stuck on the right shoulder:
+
+![alt text][image_recovery1]
+![alt text][image_recovery2]
+![alt text][image_recovery3]
+
+Then, I recorded one lap on track one using center lane driving. Here is an example image of center lane driving:
+
+![alt text][image_center]
+
+Then, I drove the car counter-clockwise to have a more balanced set of data.
+
+Finally, I applied the above techniques (center lane driving, reverse driving and recovery) for track two.
+
+To augment the data sat, I also flipped images and angles thinking that this would provide extra data for training. For example, here is an image that has then been flipped:
+
+![alt text][image_right]
+![alt text][image_right_flipped]
+
+
+After the collection process, I had 53,100 data points. I then preprocessed this data by cropping the 1/3 of the top image which does not contain car lanes information, 
+and resized the cropped image to 200 pixels width by 66 pixels height so that the image is readily used for the nvidia model.
+
+I finally randomly shuffled the data set and put 20% of the data into a validation set. 
+
+I used this training data for training the model. The validation set helped determine if the model was over or under fitting. 
+Even with 20 epochs, the vehicle was able to drive small portion of track 1. With 400 epochs, the vehicle was able to keep going on the track one, and finish the track two. I used an adam optimizer so that manually training the learning rate wasn't necessary.
+
+
+###Final Thoughts
+
+I think this project is a great example of how the machine learning can solve the real world problem which would be almost impossible to solve or at least not economical to solve in a conventional programming approach. With the ease of Keras and power of TensorFlow and other python libraries, implementing the behavioral cloning of vehicle driving was quite straightforward. 
+
+Here are further enhancements to this project:
+- Training time -- Even with Nvidia GTX 1070 graphic card, Intel i5 processor and 32GB of RAM, it took several hours to train the model with ~400 epochs.
+- Filtering of training data collection -- Udacity's Sample Training Data was compact and efficient. When I captured the training data, each second contained large amount of frames, making the training data quite large, and I ended up having to use more than 50,000 data points. I need to find a way to trim down the frames per second when capturing the train data.
+- The automated driving was not stable -- While the vehicle was able to complete both tracks, I noticed that the vehicle was moving left and right even on the straight road. I suspect this is either a training data issue or not filtering out outliers of steering angles.
+
+With that, here are the video recordings of the vehicle driving the track one and track two:
+* Track One
+[![Alt text](https://img.youtube.com/vi/h0Bbencn_1I/0.jpg)](https://www.youtube.com/watch?v=h0Bbencn_1I)
+
+* Track Two
+[![Alt text](https://img.youtube.com/vi/ZRE97JTQ1Nc/0.jpg)](https://www.youtube.com/watch?v=ZRE97JTQ1Nc)
