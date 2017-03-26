@@ -29,35 +29,35 @@ Using the Udacity provided simulator and my drive.py file, the car can be driven
 python drive.py model.json
 ```
 
-###Model Architecture and Training Strategy
+### Model Architecture and Training Strategy
 
-####1. An appropriate model architecture has been employed
+#### 1. An appropriate model architecture has been employed
 
 I adapted the [Nvidia's End to End Learning for Self-Driving Cars](http://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf) model (a.k.a. Nvidia model) with slight modification by adding ReLU activation on each layer. I chose this model because Nvidia model is well documented, proven and easy to implement.
 
 ![alt text][image_nvidia_model]
 
 
-####2. Attempts to reduce overfitting in the model
+#### 2. Attempts to reduce overfitting in the model
 
 The model contains dropout layers in order to reduce overfitting (model.py line 134). 
 
 The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 10-16). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
-####3. Model parameter tuning
+#### 3. Model parameter tuning
 
 The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 148).
 
-####4. Appropriate training data
+#### 4. Appropriate training data
 
 Training data was chosen to keep the vehicle driving on the road. I used the [Udacity's Sample Training Data](https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip) for initial training. After observing that the vehicle was not able to 
 recover in track 1, I created recovery data using the simulator by recovering from off track to the center lane. In addition, I drove Track 2 so that the model can handle both Track 1 and Track 2.
 
 For details about how I created the training data, see the next section. 
 
-###Model Architecture and Training Strategy
+### Model Architecture and Training Strategy
 
-####1. Solution Design Approach
+#### 1. Solution Design Approach
 
 My solution design approach was evolved through multiple iterations, starting from leveraging the proven Nvidia model with Udacity's sample training data using Jupyter notebook. Once I verified that the training is working with small epochs (~10), I created the model.py from the code from Jupyter notebook, and tested the drive.py with the simulator. 
 
@@ -75,14 +75,14 @@ I repeated the above steps multiple iterations until the car was driving around 
 
 At the end of the process, the vehicle is able to drive autonomously around the track one and track two without leaving the road.
 
-####2. Final Model Architecture
+#### 2. Final Model Architecture
 
 The final model architecture (model.py lines 89-123) consisted of a convolution neural network with the following layers and layer sizes based on the slight modification of Nvidia model:
 
 
 ![alt text][image_nvidia_model_tf]
 
-####3. Creation of the Training Set & Training Process
+#### 3. Creation of the Training Set & Training Process
 
 The creation of the training set and training process was done through multiple iterations. Initially, I studied Udacity's sample training data using the provided video.py to see how the training data looked like, and used the sample training data set for training.
 
@@ -115,7 +115,7 @@ I used this training data for training the model. The validation set helped dete
 Even with 20 epochs, the vehicle was able to drive small portion of track 1. With 400 epochs, the vehicle was able to keep going on the track one, and finish the track two. I used an adam optimizer so that manually training the learning rate wasn't necessary.
 
 
-###Final Thoughts
+### Final Thoughts
 
 I think this project is a great example of how the machine learning can solve the real world problem which would be almost impossible to solve or at least not economical to solve in a conventional programming approach. With the ease of Keras and power of TensorFlow and other python libraries, implementing the behavioral cloning of vehicle driving was quite straightforward. 
 
